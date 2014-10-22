@@ -1,0 +1,85 @@
+Overview.txt
+Yu, Qiu
+830457580
+
+This project designs a simple project management system, i.e. for a company to hire worker, 
+fire worker, assign worker to qualified project, as well as execute project and so on.
+
+However, since the spec is not fully completed. There are some obscure points 
+and specifications. As a result, I have listed them below and gave my own understanding
+and how did I resolve it. 
+
+1. Some completion for the spec
+
+	a). addMember(Worker w) and removeMember(Worker w) in Project class
+	
+		The spec does not mention about a method for a project to add or remove a worker, but I feel it is 
+		necessary to add these two methods. Otherwise, the company cannot find a proper way to add any worker
+		to a project.
+	
+	b). setStatus method in Project class
+	
+		I was hesitate to add this to the project class as public. But finally I did. The reason is I think the
+		company should be able to set the project status manually. 
+		
+		For example, although a company can set the status of a project as suspended by firing a worker so that 
+		the project requires additional qualifications, but what if the company just want to suspend a project 
+		because that project is not worth developing anymore? So I think the setStatus method should be visible 
+		by the company class.  
+	
+	c). Unemployed worker set and employed worker set
+	
+		I used these two sets instead of worker set and employee set. Just feel these two names are clearer than the 
+		latter.
+
+2. Some confusion about the spec
+
+	a). Qualification Set:
+	
+		The spec says when a company create a worker, that worker should be "added to the list of
+		workers matching that qualification". At this time, that worker is not hired yet, So The 
+		qualification set should contain unemployed worker here.
+		
+		However, the spec also says in hire method: "The (fired) worker is also removed for each of
+		the qualifications this worker had." That means now the unemployed worker is not in the qualification
+		set any more. 
+		
+		In my opinion, if a company just "creates" a worker who is unemployed, his role should be the same as any
+		fired worker. So it is an inconsistent description.
+		
+		What I did was to ignore what the spec said in hire() method. Because in this way, qualification set can
+		be consistent with associate workers. When you create a worker, he is automatically added to every qualification
+		set he has. Even when he is fired, it does not mean he lost those qualifications. He will still be remained 
+		in the qualification set.
+	
+	b). isOverloaded formula:
+	
+		In isOverloaded(), the spec says about the formula "1*number_of_big_projects + 2*number_of_medium_projects >= 4"
+		
+		In this context, big projects takes more weight than medium projects. That means if a worker works in 2 big
+		projects and 1 medium projects, and the overloaded parameter is less than a worker takes part in 1 big project 
+		and 2 medium projects.
+		
+		I think this does not make too much sense. But in the program, I still followed it. Because this is not
+		a complicated situation if I want to make a change. If the confusion has been solved in the future, whether this
+		formula is right or not, I can easily change it to any formula that I want.
+
+3. Some problem when I implementing the code.
+
+	a). Override hashcode
+	
+		I used HashSet to contain every set. I still don't quite sure if it is a best way to implement it. But I did have
+		a problem when I used removeall() method. I want to remove a worker from a set. However, since I was using HashSet, it
+		uses hashcode to determine whether two objects are equal even though I have overridden the equal method. The program
+		worked fine after I did that.
+	
+	b). Equal sign means reference
+	
+		This is a stupid mistake I made. In Project class, when I was trying to implementing missingQualifications method,
+		I once used "Set<Qualification> missingQualifications = requiredQualification", and planned to remove all
+		qualifications that every worker working in this project has. But then I found, every time I ran this method, the 
+		required qualification will changed. So I always failed the test. 
+		
+		After hours of debugging, I finally found this mistake. And I used another method to get missing qualification. This
+		showed that my understanding of java is not good enough. Sometimes I still forgot some basic knowledge.
+		 
