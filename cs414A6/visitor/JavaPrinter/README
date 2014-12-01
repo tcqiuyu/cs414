@@ -1,0 +1,81 @@
+JTB Examples: JavaPrinter
+Updated for JTB 1.1pre4
+November 5, 1998
+-------------------------
+
+This example is a pretty printer for the Java1.1.jj grammar provided with
+the JavaCC distribution, version 0.7.1.  It was written using JavaCC 0.7.1
+and JTB 1.1pre4.
+
+You do not need to have JTB installed to use this example, however, if you
+do and would like to see the process of generating the node classes, visitor,
+etc., do the following:
+
+   1) delete the following files:
+         - jtb.out.jj
+         - visitor/Visitor.java
+         - visitor/DepthFirstVisitor.java
+         - visitor/TreeDumper.java
+         - the syntaxtree directory.
+
+   2) run JTB on the Java1.1.jj file with the "-tk" and "-printer" options.
+      On Unix, this would be accomplished with the following command:
+
+         % jtb -tk -printer Java1.1.jj
+
+   3) now run JavaCC 0.7 or greater on the generated file jtb.out.jj.
+
+   4) compile the files.  This can be done with just the following command:
+
+         % javac Main.java
+
+   5) execute the pretty printer with a Java source file as an argument.  On
+      Unix, this would be
+
+         % java Main <your source file>
+
+If you do not have JTB 1.1pre4 or later installed, do not delete any files.
+Simply start at step 3 of the above instructions.
+
+To run the pretty printer on a Java source file, simply run the Main class
+with a java file as the argument (or use no argument to read from the standard
+input).  On most platforms this would look like this:
+
+   % java Main MyJavaClass.java
+
+The program will output to the standard output a nicely formatted version of
+the original source, now including comments.
+
+The program will output three things:
+
+   1) The source file exactly as it was read in.  This demonstrates the use
+      of the TreeDumper visitor, which uses the token location information
+      in the tree to reconstruct the original source.
+
+   2) The formatted (pretty printed) version of the source file.  The
+      TreeFormatter visitor is used to insert token location information
+      into the tree, then TreeDumper is used to output the tree.
+
+   3) A list of all the method signatures in the source file.  This
+      demonstrates an interesting way to use TreeFormatter and TreeDumper.
+
+
+NOTES
+-----
+
+The important class here is in the visitor directory with the name
+TreeFormatter.java.  This is the visitor which performs the formatting.
+The "-printer" option generates a skeleton TreeFormatter template.  The
+pretty printing code itself was written by Kevin Tao.
+
+The visitor/PrettyPrinter.java file is left for your reference.  This was
+the original JTB 1.0 Java pretty printer, coded from scratch.  It will no
+longer work with this example, but you may use it to compare with the
+new TreeFormatter way of writing source code formatters.
+
+Browse the TreeFormatter and Main classes to see how to call a visitor on
+your parse tree.  Also have a look at the other JTB-generated files in the
+visitor and syntaxtree directories.
+
+Please send any comments, questions or suggestions to Kevin Tao,
+taokr@cs.purdue.edu, or Jens Palsberg, palsberg@cs.purdue.edu.
